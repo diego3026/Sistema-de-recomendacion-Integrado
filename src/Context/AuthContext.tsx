@@ -47,22 +47,28 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
     const refreshToken = async () => {
         try {
-            if (typeof user === 'string') {
-                userData = JSON.parse(user);
-            } else {
-                userData = user;
-            }
-            const response = await apiService.post('/token/refresh', { refreshToken: userData?.refresh });
+            if (!user) return;
+
+            const response = await apiService.post('/token/refresh', {
+                refreshToken: refresh
+            });
+
+            const updatedUser = {
+                ...user,
+                access: response.access,
+                refresh: response.refresh
+            };
+
             setToken(response.access);
             setRefresh(response.refresh);
+            setUser(updatedUser);
+
             localStorage.setItem("token", response.access);
             localStorage.setItem("refresh", response.refresh);
-            userData.access = response.access;
-            userData.refresh = response.refresh;
-            setUser(userData);
+            localStorage.setItem("user", JSON.stringify(updatedUser));
         } catch (error) {
             console.error(error);
-            setUser(null);
+            logoutUser();
         }
     };
 

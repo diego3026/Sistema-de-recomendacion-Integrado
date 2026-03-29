@@ -3,7 +3,7 @@ import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
 
 class ApiService {
   private axiosInstance: AxiosInstance;
-  private baseUrlHost = "https://arqui-sistema-recomendacion-85b7038cdf33.herokuapp.com/"
+  private baseUrlHost = "http://127.0.0.1:8000/"
 
   constructor(token?: string) {
     this.axiosInstance = axios.create({

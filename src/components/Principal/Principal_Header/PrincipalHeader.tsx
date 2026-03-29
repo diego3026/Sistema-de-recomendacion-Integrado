@@ -59,7 +59,7 @@ const PrincipalHeader:  React.FC<loggedType> = ({ colorNameLogo = false, colorUb
           <ButtonGroupUser/>
           <div className="bienvenida">
             <div>Hola,</div>
-            <div className="user">{auth?.isAuthenticated ? (capitalizeFirstLetter(user?.nombre)) : ("Mi cuenta")}</div>
+            <div className="user">{auth?.isAuthenticated && user?.nombre ? (capitalizeFirstLetter(user?.nombre)) : ("Mi cuenta")}</div>
           </div>
         </div>
       </div>

@@ -183,6 +183,11 @@ const CardList: React.FC = () => {
           <p>No hay Inmuebles con los filtros seleccionados</p>
         </div>
       )}
+      {paginated.length == 0 && (
+        <div className="card__not-found">
+          <p>No hay inmuebles</p>
+        </div>
+      )}
     </div>
   );
 };

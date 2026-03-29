@@ -8,34 +8,36 @@ const PrivateRoute = () => {
 
   useEffect(() => {
     const checkTokenExpiration = async () => {
-      const accessToken = user?.accessToken;
-      let tokenExp: Date | null = null;
+      if (!user?.accessToken) return;
 
-      if (accessToken) {
-        const decodedToken = jwtDecode(accessToken);
-        if (decodedToken && typeof decodedToken.exp === 'number') {
-          tokenExp = new Date(decodedToken.exp * 1000);
-          const now = new Date();
-          // Check if token is expired in the next 5 minutes
-          if (tokenExp.getTime() - now.getTime() < 5 * 60 * 1000) {
-            try {
-              await refreshToken();
-            } catch (error) {
-              console.error(error);
-              logoutUser();
-            }
-          }
+      try {
+        const decodedToken: any = jwtDecode(user.accessToken);
+        const exp = decodedToken?.exp;
+
+        if (!exp) return;
+
+        const now = Date.now();
+        const expirationTime = exp * 1000;
+
+        const fiveMinutes = 5 * 60 * 1000;
+
+        if (expirationTime - now < fiveMinutes) {
+          await refreshToken();
         }
+      } catch (error) {
+        console.error("Token inválido:", error);
+        logoutUser();
       }
     };
 
     checkTokenExpiration();
-  }, [user, refreshToken, logoutUser]);
+  }, [user?.accessToken]);
 
-  if (!isAuthenticated){
-    return <Navigate to="/inicio-sesion" />
+  if (!isAuthenticated) {
+    return <Navigate to="/inicio-sesion" replace />;
   }
+
   return <Outlet />;
 };
 
-export default PrivateRoute; 
+export default PrivateRoute;
